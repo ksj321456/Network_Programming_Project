@@ -58,10 +58,10 @@ public class DrawingServer extends JFrame {
                 SketchingData data;
                 while ((data = (SketchingData) in.readObject()) != null) {
                     //채팅 메시지를 받았을 때
-                    printDisplay("클라이언트로부터 데이터 수신");
+                    //printDisplay("클라이언트로부터 데이터 수신");
                     if (data.getMode() == SketchingData.LINE) {
                         Line line = data.getLine();
-                        printDisplay("그리기 좌표: " + line.getX1() + ", " + line.getY1() + ", " + line.getX2() + ", " + line.getY2());
+                        //printDisplay("그리기 좌표: " + line.getX1() + ", " + line.getY1() + ", " + line.getX2() + ", " + line.getY2());
                         broadcast(data, this);
                     }
                     //스케치 데이터를 받았을 때

@@ -44,8 +44,6 @@ public class DrawingClient extends JFrame {
 
         add(centerPanel);
 
-        DrawingThread drawingThread = new DrawingThread();
-        drawingThread.start();
 
         add(inputPanel, BorderLayout.SOUTH);
         add(chatingListPanel, BorderLayout.EAST);
@@ -78,6 +76,10 @@ public class DrawingClient extends JFrame {
                 } catch (IOException ex) {
                     throw new RuntimeException(ex);
                 }
+
+                // 마지막 좌표를 현재 좌표로 업데이트
+                lastPoint = new Point(e.getX(), e.getY());
+                
             }
         }
 
@@ -136,6 +138,10 @@ public class DrawingClient extends JFrame {
             //out.flush();
             Thread sendCoordsThread = new ReceiveThread(socket);
             sendCoordsThread.start(); //ObjectOutputStream을 ObjectInputStream보다 먼저 생성해야 함. 미준수시 데드락 발생 가능성 있음.
+
+            //순서: 데이터 수신 스레드 실행 후 -> 그리기를 실행하는 스레드 실행.
+            DrawingThread drawingThread = new DrawingThread();
+            drawingThread.start();
 
         } catch (IOException e) {
             e.printStackTrace();

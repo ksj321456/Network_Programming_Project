@@ -79,7 +79,7 @@ public class DrawingClient extends JFrame {
 
                 // 마지막 좌표를 현재 좌표로 업데이트
                 lastPoint = new Point(e.getX(), e.getY());
-                
+
             }
         }
 
@@ -136,12 +136,14 @@ public class DrawingClient extends JFrame {
             socket = new Socket(SERVER_ADDRESS, SERVER_PORT);
             out = new ObjectOutputStream(new BufferedOutputStream(socket.getOutputStream()));
             //out.flush();
+
+            //순서: 그리기를 실행하는 스레드 실행 후 -> 데이터 수신 스레드 실행. 역순으로하게되면 채팅 전송하기전까지 그림을 그릴 수 없음.
+            DrawingThread drawingThread = new DrawingThread();
+            drawingThread.start();
+
             Thread sendCoordsThread = new ReceiveThread(socket);
             sendCoordsThread.start(); //ObjectOutputStream을 ObjectInputStream보다 먼저 생성해야 함. 미준수시 데드락 발생 가능성 있음.
 
-            //순서: 데이터 수신 스레드 실행 후 -> 그리기를 실행하는 스레드 실행.
-            DrawingThread drawingThread = new DrawingThread();
-            drawingThread.start();
 
         } catch (IOException e) {
             e.printStackTrace();
